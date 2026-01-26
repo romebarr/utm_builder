@@ -1,4 +1,4 @@
-import html
+import json
 import re
 from typing import Dict, List, Tuple
 
@@ -91,38 +91,32 @@ def append_query_params(url: str, params: List[Tuple[str, str]]) -> str:
     return f"{url}{joiner}{query}"
 
 
-def render_copy_button(value: str) -> None:
-    """Render a copy-to-clipboard button using HTML."""
-    escaped = html.escape(value, quote=True)
+def copy_to_clipboard(value: str) -> None:
+    """Copy text to clipboard using a small JS snippet."""
+    payload = json.dumps(value)
     html_block = f"""
-    <div style="display:flex; gap:8px; align-items:center;">
-      <input id="utm-output" type="text" value="{escaped}"
-        style="position:absolute; left:-9999px; top:-9999px;" />
-      <button id="copy-btn" style="padding:6px 12px;">Copiar</button>
-      <span id="copy-status" style="font-size:12px;"></span>
-    </div>
     <script>
-      const btn = document.getElementById("copy-btn");
-      const status = document.getElementById("copy-status");
-      btn.addEventListener("click", async () => {{
-        const text = document.getElementById("utm-output").value;
+      const text = {payload};
+      const copyText = async () => {{
         try {{
           if (navigator.clipboard && navigator.clipboard.writeText) {{
             await navigator.clipboard.writeText(text);
           }} else {{
-            const input = document.getElementById("utm-output");
-            input.focus();
+            const input = document.createElement("textarea");
+            input.value = text;
+            document.body.appendChild(input);
             input.select();
             document.execCommand("copy");
+            document.body.removeChild(input);
           }}
-          status.textContent = "Copiado";
         }} catch (err) {{
-          status.textContent = "No se pudo copiar";
+          console.warn("Copy failed", err);
         }}
-      }});
+      }};
+      copyText();
     </script>
     """
-    components.html(html_block, height=50)
+    components.html(html_block, height=0)
 
 
 def build_params(
@@ -286,9 +280,10 @@ st.text_area(
 )
 
 if final_url:
-    render_copy_button(final_url)
+    if st.button("Copiar"):
+        copy_to_clipboard(final_url)
     st.caption(
-        "Si el boton no funciona, copia manualmente la URL de abajo."
+        "Si no se copio, copia manualmente la URL de abajo."
     )
     st.code(final_url)
 
