@@ -1,7 +1,9 @@
+import html
 import re
 from typing import Dict, List, Tuple
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 
 MEDIUM_OPTIONS = [
@@ -25,6 +27,7 @@ PRODUCT_OPTIONS = [
     "CUENTA MAS",
     "CUENTA MAXIMA",
     "BANKARD",
+    "CDP",
     "CUENTA CORRIENTE",
     "CREDIMAX",
     "CUENTA NOMINA",
@@ -37,6 +40,7 @@ PRODUCT_MAP: Dict[str, str] = {
     "CUENTA MAS": "CTA-MAS",
     "CUENTA MAXIMA": "CTA-MAXIMA",
     "BANKARD": "BANKARD",
+    "CDP": "CDP",
     "CUENTA CORRIENTE": "CTA-CORRIENTE",
     "CREDIMAX": "CREDIMAX",
     "CUENTA NOMINA": "CTA-NOMINA",
@@ -85,6 +89,40 @@ def append_query_params(url: str, params: List[Tuple[str, str]]) -> str:
 
     query = "&".join([f"{key}={value}" for key, value in params])
     return f"{url}{joiner}{query}"
+
+
+def render_copy_button(value: str) -> None:
+    """Render a copy-to-clipboard button using HTML."""
+    escaped = html.escape(value, quote=True)
+    html_block = f"""
+    <div style="display:flex; gap:8px; align-items:center;">
+      <input id="utm-output" type="text" value="{escaped}"
+        style="position:absolute; left:-9999px; top:-9999px;" />
+      <button id="copy-btn" style="padding:6px 12px;">Copiar</button>
+      <span id="copy-status" style="font-size:12px;"></span>
+    </div>
+    <script>
+      const btn = document.getElementById("copy-btn");
+      const status = document.getElementById("copy-status");
+      btn.addEventListener("click", async () => {{
+        const text = document.getElementById("utm-output").value;
+        try {{
+          if (navigator.clipboard && navigator.clipboard.writeText) {{
+            await navigator.clipboard.writeText(text);
+          }} else {{
+            const input = document.getElementById("utm-output");
+            input.focus();
+            input.select();
+            document.execCommand("copy");
+          }}
+          status.textContent = "Copiado";
+        }} catch (err) {{
+          status.textContent = "No se pudo copiar";
+        }}
+      }});
+    </script>
+    """
+    components.html(html_block, height=50)
 
 
 def build_params(
@@ -248,10 +286,10 @@ st.text_area(
 )
 
 if final_url:
-    if st.button("Copiar"):
-        st.info(
-            "Copia manualmente la URL desde el cuadro o el bloque de abajo."
-        )
+    render_copy_button(final_url)
+    st.caption(
+        "Si el boton no funciona, copia manualmente la URL de abajo."
+    )
     st.code(final_url)
 
 st.subheader("Vista previa de parametros")
