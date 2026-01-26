@@ -1,10 +1,7 @@
-import hashlib
-import json
 import re
 from typing import Dict, List, Tuple
 
 import streamlit as st
-import streamlit.components.v1 as components
 
 
 MEDIUM_OPTIONS = [
@@ -90,43 +87,6 @@ def append_query_params(url: str, params: List[Tuple[str, str]]) -> str:
 
     query = "&".join([f"{key}={value}" for key, value in params])
     return f"{url}{joiner}{query}"
-
-
-def render_copy_button(value: str) -> None:
-    """Render a copy button that copies the URL."""
-    payload = json.dumps(value)
-    uid = hashlib.md5(value.encode("utf-8")).hexdigest()
-    button_id = f"copy-btn-{uid}"
-    status_id = f"copy-status-{uid}"
-    html_block = f"""
-    <div style="display:flex; gap:8px; align-items:center;">
-      <button id="{button_id}" style="padding:6px 12px;">Copiar</button>
-      <span id="{status_id}" style="font-size:12px;"></span>
-    </div>
-    <script>
-      const text = {payload};
-      const btn = document.getElementById("{button_id}");
-      const status = document.getElementById("{status_id}");
-      btn.addEventListener("click", async () => {{
-        try {{
-          if (navigator.clipboard && navigator.clipboard.writeText) {{
-            await navigator.clipboard.writeText(text);
-          }} else {{
-            const input = document.createElement("textarea");
-            input.value = text;
-            document.body.appendChild(input);
-            input.select();
-            document.execCommand("copy");
-            document.body.removeChild(input);
-          }}
-          status.textContent = "Copiado";
-        }} catch (err) {{
-          status.textContent = "No se pudo copiar";
-        }}
-      }});
-    </script>
-    """
-    components.html(html_block, height=50, key=f"copy-{uid}")
 
 
 def build_params(
@@ -290,10 +250,6 @@ st.text_area(
 )
 
 if final_url:
-    render_copy_button(final_url)
-    st.caption(
-        "Si no se copio, copia manualmente la URL de abajo."
-    )
     st.code(final_url)
 
 st.subheader("Vista previa de parametros")
