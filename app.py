@@ -1,3 +1,4 @@
+import hashlib
 import json
 import re
 from typing import Dict, List, Tuple
@@ -94,15 +95,18 @@ def append_query_params(url: str, params: List[Tuple[str, str]]) -> str:
 def render_copy_button(value: str) -> None:
     """Render a copy button that copies the URL."""
     payload = json.dumps(value)
+    uid = hashlib.md5(value.encode("utf-8")).hexdigest()
+    button_id = f"copy-btn-{uid}"
+    status_id = f"copy-status-{uid}"
     html_block = f"""
     <div style="display:flex; gap:8px; align-items:center;">
-      <button id="copy-btn" style="padding:6px 12px;">Copiar</button>
-      <span id="copy-status" style="font-size:12px;"></span>
+      <button id="{button_id}" style="padding:6px 12px;">Copiar</button>
+      <span id="{status_id}" style="font-size:12px;"></span>
     </div>
     <script>
       const text = {payload};
-      const btn = document.getElementById("copy-btn");
-      const status = document.getElementById("copy-status");
+      const btn = document.getElementById("{button_id}");
+      const status = document.getElementById("{status_id}");
       btn.addEventListener("click", async () => {{
         try {{
           if (navigator.clipboard && navigator.clipboard.writeText) {{
@@ -122,7 +126,7 @@ def render_copy_button(value: str) -> None:
       }});
     </script>
     """
-    components.html(html_block, height=50)
+    components.html(html_block, height=50, key=f"copy-{uid}")
 
 
 def build_params(
