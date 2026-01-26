@@ -91,13 +91,19 @@ def append_query_params(url: str, params: List[Tuple[str, str]]) -> str:
     return f"{url}{joiner}{query}"
 
 
-def copy_to_clipboard(value: str) -> None:
-    """Copy text to clipboard using a small JS snippet."""
+def render_copy_button(value: str) -> None:
+    """Render a copy button that copies the URL."""
     payload = json.dumps(value)
     html_block = f"""
+    <div style="display:flex; gap:8px; align-items:center;">
+      <button id="copy-btn" style="padding:6px 12px;">Copiar</button>
+      <span id="copy-status" style="font-size:12px;"></span>
+    </div>
     <script>
       const text = {payload};
-      const copyText = async () => {{
+      const btn = document.getElementById("copy-btn");
+      const status = document.getElementById("copy-status");
+      btn.addEventListener("click", async () => {{
         try {{
           if (navigator.clipboard && navigator.clipboard.writeText) {{
             await navigator.clipboard.writeText(text);
@@ -109,14 +115,14 @@ def copy_to_clipboard(value: str) -> None:
             document.execCommand("copy");
             document.body.removeChild(input);
           }}
+          status.textContent = "Copiado";
         }} catch (err) {{
-          console.warn("Copy failed", err);
+          status.textContent = "No se pudo copiar";
         }}
-      }};
-      copyText();
+      }});
     </script>
     """
-    components.html(html_block, height=0)
+    components.html(html_block, height=50)
 
 
 def build_params(
@@ -280,8 +286,7 @@ st.text_area(
 )
 
 if final_url:
-    if st.button("Copiar"):
-        copy_to_clipboard(final_url)
+    render_copy_button(final_url)
     st.caption(
         "Si no se copio, copia manualmente la URL de abajo."
     )
