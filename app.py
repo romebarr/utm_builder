@@ -36,7 +36,20 @@ OBJECTIVE_OPTIONS = [
     "ALCANCE",
 ]
 
-MONTH_OPTIONS = [f"{month:02d}" for month in range(1, 13)]
+MONTH_MAP: Dict[str, str] = {
+    "ENERO": "01",
+    "FEBRERO": "02",
+    "MARZO": "03",
+    "ABRIL": "04",
+    "MAYO": "05",
+    "JUNIO": "06",
+    "JULIO": "07",
+    "AGOSTO": "08",
+    "SEPTIEMBRE": "09",
+    "OCTUBRE": "10",
+    "NOVIEMBRE": "11",
+    "DICIEMBRE": "12",
+}
 
 PRODUCT_OPTIONS = [
     "CUENTA DE AHORROS",
@@ -170,7 +183,7 @@ def load_test_case(base_url: str) -> None:
     st.session_state["utm_campaign_funnel"] = list(FUNNEL_OPTIONS.keys())[0]
     st.session_state["utm_campaign_objective"] = OBJECTIVE_OPTIONS[0]
     st.session_state["utm_campaign_tipo"] = "PROMO"
-    st.session_state["utm_campaign_mes"] = "01"
+    st.session_state["utm_campaign_mes"] = "ENERO"
     st.session_state["utm_campaign_anio"] = "2026"
     st.session_state["utm_content"] = "banner_a"
     st.session_state["utm_testing"] = "test_a"
@@ -261,7 +274,7 @@ with st.sidebar:
         st.text_input("Tipo", key="utm_campaign_tipo")
         st.selectbox(
             "Mes",
-            options=[""] + MONTH_OPTIONS,
+            options=[""] + list(MONTH_MAP.keys()),
             key="utm_campaign_mes",
             format_func=lambda value: "Selecciona" if value == "" else value,
         )
@@ -301,13 +314,14 @@ if st.session_state["utm_campaign_use_builder"]:
     funnel_value = FUNNEL_OPTIONS.get(
         st.session_state["utm_campaign_funnel"], ""
     )
+    month_value = MONTH_MAP.get(st.session_state["utm_campaign_mes"], "")
     campaign = build_campaign_name(
         st.session_state["utm_campaign_stage"],
         funnel_value,
         product,
         st.session_state["utm_campaign_objective"],
         st.session_state["utm_campaign_tipo"],
-        st.session_state["utm_campaign_mes"],
+        month_value,
         st.session_state["utm_campaign_anio"],
     )
 else:
@@ -337,7 +351,7 @@ if st.session_state["utm_campaign_use_builder"]:
         missing_fields.append("Objetivo")
     if not sanitize(st.session_state["utm_campaign_tipo"]):
         missing_fields.append("Tipo")
-    if not sanitize(st.session_state["utm_campaign_mes"]):
+    if not MONTH_MAP.get(st.session_state["utm_campaign_mes"], ""):
         missing_fields.append("Mes")
     if not sanitize(st.session_state["utm_campaign_anio"]):
         missing_fields.append("Anio")
