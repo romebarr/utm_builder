@@ -20,6 +20,8 @@ MEDIUM_OPTIONS = [
     "other",
 ]
 
+LINK_TYPE_OPTIONS = ["Sitio web", "Deeplink"]
+
 STAGE_MAP: Dict[str, str] = {
     "ADQUISICION": "ADQ",
     "DESARROLLO": "DES",
@@ -55,6 +57,186 @@ MONTH_MAP: Dict[str, str] = {
     "NOVIEMBRE": "11",
     "DICIEMBRE": "12",
 }
+
+DEEPLINKS = [
+    {
+        "service": "ACTCV",
+        "description": "Activacion de Clave Virtual",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=ACTCV",
+    },
+    {
+        "service": "ACTDATOS",
+        "description": "Actualizacion de Datos",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=ACTDATOS",
+    },
+    {
+        "service": "AVAEFE",
+        "description": "Avance en efectivo",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=AVAEFE",
+    },
+    {
+        "service": "CTARD",
+        "description": "Compra con tarjeta",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CTARD",
+    },
+    {
+        "service": "CTAID",
+        "description": "Compra con tarjeta Internacional",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CTAID",
+    },
+    {
+        "service": "SERVICC",
+        "description": "Consola de Pago Servicios",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=SERVICC",
+    },
+    {
+        "service": "CONIN",
+        "description": "Consumo por Internet",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CONIN",
+    },
+    {
+        "service": "DESTC",
+        "description": "Desbloqueo de TC autogestion",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=DESTC",
+    },
+    {
+        "service": "DESUSR",
+        "description": "Desbloqueo de usuario",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=DESUSR",
+    },
+    {
+        "service": "DESTD",
+        "description": "Desbloqueo temporal TD autogestion",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=DESTD",
+    },
+    {
+        "service": "DIFCO",
+        "description": "Diferimiento de Consumo y avance",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=DIFCO",
+    },
+    {
+        "service": "DIFSAL",
+        "description": "Diferimiento de saldos",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=DIFSAL",
+    },
+    {
+        "service": "PAUTPEA",
+        "description": "Flujo pago servicios Automotores y Peatones",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PAUTPEA",
+    },
+    {
+        "service": "IMPOBLI",
+        "description": "Flujo pago servicios Impuestos y obligaciones",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=IMPOBLI",
+    },
+    {
+        "service": "PTLFCEL",
+        "description": "Flujo pago servicios Telefonia Celular",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PTLFCEL",
+    },
+    {
+        "service": "LOGIN",
+        "description": "Ingreso a la app",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=LOGIN",
+    },
+    {
+        "service": "MATRPS",
+        "description": "Matriculacion Pago de Servicios",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=MATRPS&servicio=",
+    },
+    {
+        "service": "OPENACOUNT",
+        "description": "ONB Apertura de Cuenta",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=OPENACOUNT",
+    },
+    {
+        "service": "CRTDEPOL",
+        "description": "ONB Certificado de deposito online",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CRTDEPOL",
+    },
+    {
+        "service": "CREDIMAX",
+        "description": "ONB Credimax Online",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CREDIMAX",
+    },
+    {
+        "service": "CTAMASON",
+        "description": "ONB Cuenta Mas Online",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CTAMASON",
+    },
+    {
+        "service": "CTAMAXON",
+        "description": "ONB Cuenta Maxima Online",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CTAMAXON",
+    },
+    {
+        "service": "REFBANCA",
+        "description": "ONB Referencia Bancaria",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=REFBANCA",
+    },
+    {
+        "service": "SOLPRO",
+        "description": "ONB Solicitud de productos",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=SOLPRO",
+    },
+    {
+        "service": "TARBKN",
+        "description": "ONB Tarjeta de credito cliente",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=TARBKN",
+    },
+    {
+        "service": "PEDUCA",
+        "description": "Pagar Educacion",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PEDUCA",
+    },
+    {
+        "service": "PAGUA",
+        "description": "Pagar el agua",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PAGUA",
+    },
+    {
+        "service": "PINNET",
+        "description": "Pagar el internet",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PINNET",
+    },
+    {
+        "service": "PIESS",
+        "description": "Pagar IESS",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PIESS",
+    },
+    {
+        "service": "PLUZ",
+        "description": "Pagar la luz",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PLUZ",
+    },
+    {
+        "service": "PTRJCA",
+        "description": "Pagar Tarjetas comerciales",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PTRJCA",
+    },
+    {
+        "service": "PTLFIJA",
+        "description": "Pagar telefonia fija",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PTLFIJA",
+    },
+    {
+        "service": "PTVPAG",
+        "description": "Pagar Television pagada",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PTVPAG",
+    },
+    {
+        "service": "SCOREC",
+        "description": "Score Crediticio",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=SCOREC",
+    },
+    {
+        "service": "TRFWIP",
+        "description": "WIP",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=TRFWIP",
+    },
+]
+
+DEEPLINK_MAP = {item["service"]: item for item in DEEPLINKS}
 
 PRODUCT_OPTIONS = [
     "CUENTA DE AHORROS",
@@ -195,6 +377,7 @@ def build_campaign_name(
 
 def load_test_case(base_url: str) -> None:
     """Load a test case into session state."""
+    st.session_state["link_type"] = "Sitio web"
     st.session_state["base_url"] = base_url
     st.session_state["utm_source"] = "google"
     st.session_state["utm_medium_choice"] = "cpc"
@@ -220,7 +403,10 @@ st.write(
 )
 
 DEFAULTS = {
+    "link_type": "Sitio web",
     "base_url": "",
+    "deeplink_choice": DEEPLINKS[0]["service"],
+    "deeplink_servicio": "",
     "utm_source": "",
     "utm_medium_choice": MEDIUM_OPTIONS[0],
     "utm_medium_other": "",
@@ -244,7 +430,33 @@ for key, value in DEFAULTS.items():
 
 with st.sidebar:
     st.header("Inputs")
-    st.text_input("URL base (obligatorio)", key="base_url")
+    st.selectbox(
+        "Tipo de enlace",
+        options=LINK_TYPE_OPTIONS,
+        key="link_type",
+    )
+    if st.session_state["link_type"] == "Sitio web":
+        st.text_input("URL base (obligatorio)", key="base_url")
+    else:
+        st.selectbox(
+            "Servicio deeplink",
+            options=[item["service"] for item in DEEPLINKS],
+            key="deeplink_choice",
+            format_func=lambda value: (
+                f"{value} - {DEEPLINK_MAP[value]['description']}"
+            ),
+        )
+        if st.session_state["deeplink_choice"] == "MATRPS":
+            st.text_input("servicio (opcional)", key="deeplink_servicio")
+        selected_url = DEEPLINK_MAP[
+            st.session_state["deeplink_choice"]
+        ]["url"]
+        if (
+            st.session_state["deeplink_choice"] == "MATRPS"
+            and sanitize(st.session_state["deeplink_servicio"])
+        ):
+            selected_url += sanitize(st.session_state["deeplink_servicio"])
+        st.text_input("URL deeplink", value=selected_url, disabled=True)
 
     st.text_input("utm_source (obligatorio)", key="utm_source")
 
@@ -302,7 +514,12 @@ with st.sidebar:
         st.text_input("utm_product (otro)", key="utm_product_other")
 
 
-base_url = st.session_state["base_url"].strip()
+if st.session_state["link_type"] == "Deeplink":
+    base_url = DEEPLINK_MAP[st.session_state["deeplink_choice"]]["url"]
+    if st.session_state["deeplink_choice"] == "MATRPS":
+        base_url += sanitize(st.session_state["deeplink_servicio"])
+else:
+    base_url = st.session_state["base_url"].strip()
 source = sanitize(st.session_state["utm_source"])
 
 medium_choice = st.session_state["utm_medium_choice"]
