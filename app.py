@@ -9,7 +9,7 @@ SOURCE_OPTIONS = [
     "Meta",
     "Google Ads",
     "Hubspot",
-    "Eclipsoft",
+    "SMS",
     "Whatsapp",
     "Otro",
 ]
@@ -24,7 +24,6 @@ MEDIUM_OPTIONS = [
     "blog",
     "youtube",
     "banner",
-    "Otro",
 ]
 
 LINK_TYPE_OPTIONS = ["Sitio web", "Deeplink", "Onboarding No Clientes"]
