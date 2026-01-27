@@ -4,6 +4,15 @@ from typing import Dict, List, Tuple
 import streamlit as st
 
 
+SOURCE_OPTIONS = [
+    "Latinia",
+    "Meta",
+    "Google Ads",
+    "Hubspot",
+    "Eclipsoft",
+    "Whatsapp",
+]
+
 MEDIUM_OPTIONS = [
     "paid",
     "email",
@@ -444,7 +453,7 @@ def load_test_case(base_url: str) -> None:
     """Load a test case into session state."""
     st.session_state["link_type"] = "Sitio web"
     st.session_state["base_url"] = base_url
-    st.session_state["utm_source"] = "google"
+    st.session_state["utm_source_choice"] = SOURCE_OPTIONS[0]
     st.session_state["utm_medium_choice"] = "paid"
     st.session_state["utm_campaign_use_builder"] = False
     st.session_state["utm_campaign"] = "lanzamiento_enero"
@@ -472,7 +481,7 @@ DEFAULTS = {
     "deeplink_choice": DEEPLINKS[0]["service"],
     "deeplink_servicio": "",
     "onboarding_choice": list(ONBOARDING_LINKS.keys())[0],
-    "utm_source": "",
+    "utm_source_choice": SOURCE_OPTIONS[0],
     "utm_medium_choice": MEDIUM_OPTIONS[0],
     "utm_campaign_use_builder": False,
     "utm_campaign": "",
@@ -542,7 +551,11 @@ with st.sidebar:
             disabled=True,
         )
 
-    st.text_input("utm_source (obligatorio)", key="utm_source")
+    st.selectbox(
+        "utm_source (obligatorio)",
+        options=SOURCE_OPTIONS,
+        key="utm_source_choice",
+    )
 
     st.subheader("utm_medium")
     medium_options = MEDIUM_OPTIONS
@@ -604,7 +617,7 @@ elif st.session_state["link_type"] == "Onboarding No Clientes":
     base_url = ONBOARDING_LINKS[st.session_state["onboarding_choice"]]
 else:
     base_url = st.session_state["base_url"].strip()
-source = sanitize(st.session_state["utm_source"])
+source = sanitize(st.session_state["utm_source_choice"])
 
 medium_choice = st.session_state["utm_medium_choice"]
 medium = sanitize(medium_choice)
