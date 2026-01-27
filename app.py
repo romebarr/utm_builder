@@ -4,6 +4,16 @@ from typing import Dict, List, Tuple
 import streamlit as st
 
 
+SOURCE_OPTIONS = [
+    "Latinia",
+    "Meta",
+    "Google Ads",
+    "Hubspot",
+    "SMS",
+    "Whatsapp",
+    "Otro",
+]
+
 MEDIUM_OPTIONS = [
     "paid",
     "email",
@@ -16,7 +26,7 @@ MEDIUM_OPTIONS = [
     "banner",
 ]
 
-LINK_TYPE_OPTIONS = ["Sitio web", "Deeplink"]
+LINK_TYPE_OPTIONS = ["Sitio web", "Deeplink", "Onboarding No Clientes"]
 
 STAGE_MAP: Dict[str, str] = {
     "ADQUISICION": "ADQ",
@@ -299,6 +309,12 @@ DEEPLINKS = [
 
 DEEPLINK_MAP = {item["service"]: item for item in DEEPLINKS}
 
+ONBOARDING_LINKS: Dict[str, str] = {
+    "Credimax": "https://credimax.bolivariano.com/",
+    "Tarjeta de Credito": "https://tarjetadecredito.bolivariano.com/",
+    "Cuenta de Ahorros": "https://cuentas.bolivariano.com/",
+}
+
 PRODUCT_OPTIONS = [
     "CUENTA DE AHORROS",
     "CUENTA MAS",
@@ -438,8 +454,9 @@ def load_test_case(base_url: str) -> None:
     """Load a test case into session state."""
     st.session_state["link_type"] = "Sitio web"
     st.session_state["base_url"] = base_url
-    st.session_state["utm_source"] = "google"
-    st.session_state["utm_medium_choice"] = "cpc"
+    st.session_state["utm_source_choice"] = SOURCE_OPTIONS[0]
+    st.session_state["utm_source_other"] = ""
+    st.session_state["utm_medium_choice"] = "paid"
     st.session_state["utm_medium_other"] = ""
     st.session_state["utm_campaign_use_builder"] = False
     st.session_state["utm_campaign"] = "lanzamiento_enero"
@@ -466,7 +483,9 @@ DEFAULTS = {
     "base_url": "",
     "deeplink_choice": DEEPLINKS[0]["service"],
     "deeplink_servicio": "",
-    "utm_source": "",
+    "onboarding_choice": list(ONBOARDING_LINKS.keys())[0],
+    "utm_source_choice": SOURCE_OPTIONS[0],
+    "utm_source_other": "",
     "utm_medium_choice": MEDIUM_OPTIONS[0],
     "utm_medium_other": "",
     "utm_campaign_use_builder": False,
@@ -496,7 +515,7 @@ with st.sidebar:
     )
     if st.session_state["link_type"] == "Sitio web":
         st.text_input("URL base (obligatorio)", key="base_url")
-    else:
+    elif st.session_state["link_type"] == "Deeplink":
         st.selectbox(
             "Servicio deeplink",
             options=[item["service"] for item in DEEPLINKS],
@@ -521,8 +540,29 @@ with st.sidebar:
             value=selected_url,
             disabled=True,
         )
+    else:
+        st.selectbox(
+            "Onboarding no clientes",
+            options=list(ONBOARDING_LINKS.keys()),
+            key="onboarding_choice",
+        )
+        selected_url = ONBOARDING_LINKS[
+            st.session_state["onboarding_choice"]
+        ]
+        st.session_state["base_url"] = selected_url
+        st.text_input(
+            "URL base (onboarding)",
+            value=selected_url,
+            disabled=True,
+        )
 
-    st.text_input("utm_source (obligatorio)", key="utm_source")
+    st.selectbox(
+        "utm_source (obligatorio)",
+        options=SOURCE_OPTIONS,
+        key="utm_source_choice",
+    )
+    if st.session_state["utm_source_choice"] == "Otro":
+        st.text_input("utm_source (otro)", key="utm_source_other")
 
     st.subheader("utm_medium")
     medium_options = MEDIUM_OPTIONS
@@ -533,7 +573,7 @@ with st.sidebar:
         options=medium_options,
         key="utm_medium_choice",
     )
-    if st.session_state["utm_medium_choice"] == "other":
+    if st.session_state["utm_medium_choice"] == "Otro":
         st.text_input("utm_medium (otro)", key="utm_medium_other")
 
     st.subheader("utm_campaign")
@@ -582,18 +622,20 @@ if st.session_state["link_type"] == "Deeplink":
     base_url = DEEPLINK_MAP[st.session_state["deeplink_choice"]]["url"]
     if st.session_state["deeplink_choice"] == "MATRPS":
         base_url += sanitize(st.session_state["deeplink_servicio"])
+elif st.session_state["link_type"] == "Onboarding No Clientes":
+    base_url = ONBOARDING_LINKS[st.session_state["onboarding_choice"]]
 else:
     base_url = st.session_state["base_url"].strip()
-source = sanitize(st.session_state["utm_source"])
+if st.session_state["utm_source_choice"] == "Otro":
+    source = sanitize(st.session_state["utm_source_other"])
+else:
+    source = sanitize(st.session_state["utm_source_choice"])
 
 medium_choice = st.session_state["utm_medium_choice"]
-if medium_choice == "other":
-    medium_raw = st.session_state["utm_medium_other"]
-elif medium_choice == "":
-    medium_raw = ""
+if medium_choice == "Otro":
+    medium = sanitize(st.session_state["utm_medium_other"])
 else:
-    medium_raw = medium_choice
-medium = sanitize(medium_raw)
+    medium = sanitize(medium_choice)
 
 product = resolve_product_value(
     st.session_state["utm_product_choice"],
