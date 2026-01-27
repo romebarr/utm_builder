@@ -11,6 +11,7 @@ SOURCE_OPTIONS = [
     "Hubspot",
     "Eclipsoft",
     "Whatsapp",
+    "Otro",
 ]
 
 MEDIUM_OPTIONS = [
@@ -23,6 +24,7 @@ MEDIUM_OPTIONS = [
     "blog",
     "youtube",
     "banner",
+    "Otro",
 ]
 
 LINK_TYPE_OPTIONS = ["Sitio web", "Deeplink", "Onboarding No Clientes"]
@@ -454,7 +456,9 @@ def load_test_case(base_url: str) -> None:
     st.session_state["link_type"] = "Sitio web"
     st.session_state["base_url"] = base_url
     st.session_state["utm_source_choice"] = SOURCE_OPTIONS[0]
+    st.session_state["utm_source_other"] = ""
     st.session_state["utm_medium_choice"] = "paid"
+    st.session_state["utm_medium_other"] = ""
     st.session_state["utm_campaign_use_builder"] = False
     st.session_state["utm_campaign"] = "lanzamiento_enero"
     st.session_state["utm_campaign_stage"] = list(STAGE_MAP.keys())[0]
@@ -482,7 +486,9 @@ DEFAULTS = {
     "deeplink_servicio": "",
     "onboarding_choice": list(ONBOARDING_LINKS.keys())[0],
     "utm_source_choice": SOURCE_OPTIONS[0],
+    "utm_source_other": "",
     "utm_medium_choice": MEDIUM_OPTIONS[0],
+    "utm_medium_other": "",
     "utm_campaign_use_builder": False,
     "utm_campaign": "",
     "utm_campaign_stage": list(STAGE_MAP.keys())[0],
@@ -556,6 +562,8 @@ with st.sidebar:
         options=SOURCE_OPTIONS,
         key="utm_source_choice",
     )
+    if st.session_state["utm_source_choice"] == "Otro":
+        st.text_input("utm_source (otro)", key="utm_source_other")
 
     st.subheader("utm_medium")
     medium_options = MEDIUM_OPTIONS
@@ -566,6 +574,8 @@ with st.sidebar:
         options=medium_options,
         key="utm_medium_choice",
     )
+    if st.session_state["utm_medium_choice"] == "Otro":
+        st.text_input("utm_medium (otro)", key="utm_medium_other")
 
     st.subheader("utm_campaign")
     st.toggle(
@@ -617,10 +627,16 @@ elif st.session_state["link_type"] == "Onboarding No Clientes":
     base_url = ONBOARDING_LINKS[st.session_state["onboarding_choice"]]
 else:
     base_url = st.session_state["base_url"].strip()
-source = sanitize(st.session_state["utm_source_choice"])
+if st.session_state["utm_source_choice"] == "Otro":
+    source = sanitize(st.session_state["utm_source_other"])
+else:
+    source = sanitize(st.session_state["utm_source_choice"])
 
 medium_choice = st.session_state["utm_medium_choice"]
-medium = sanitize(medium_choice)
+if medium_choice == "Otro":
+    medium = sanitize(st.session_state["utm_medium_other"])
+else:
+    medium = sanitize(medium_choice)
 
 product = resolve_product_value(
     st.session_state["utm_product_choice"],
