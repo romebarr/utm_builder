@@ -5,19 +5,15 @@ import streamlit as st
 
 
 MEDIUM_OPTIONS = [
-    "cpc",
-    "paid_social",
+    "paid",
     "email",
     "whatsapp",
     "push",
     "sms",
     "display",
-    "referral",
-    "organic",
-    "affiliate",
-    "social",
-    "video",
-    "other",
+    "blog",
+    "youtube",
+    "banner",
 ]
 
 LINK_TYPE_OPTIONS = ["Sitio web", "Deeplink", "Onboarding No Clientes"]
@@ -234,6 +230,71 @@ DEEPLINKS = [
         "description": "WIP",
         "url": "https://mercadeo.bolivariano.com/index.html?dlop=TRFWIP",
     },
+    {
+        "service": "AGUA",
+        "description": "Matriculacion de Agua",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=AGUA",
+    },
+    {
+        "service": "INTERNET",
+        "description": "Matriculacion de Internet",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=INTERNET",
+    },
+    {
+        "service": "LUZ",
+        "description": "Matriculacion de Luz",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=LUZ",
+    },
+    {
+        "service": "TELEFONIA_CELULAR",
+        "description": "Matriculacion de Telefonia Celular",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=TELEFONIA_CELULAR",
+    },
+    {
+        "service": "TELEFONIA_FIJA",
+        "description": "Matriculacion de Telefonia Fija",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=TELEFONIA_FIJA",
+    },
+    {
+        "service": "TELEVISION_PAGADA",
+        "description": "Matriculacion de Television Pagada",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=TELEVISION_PAGADA",
+    },
+    {
+        "service": "EDUCACION",
+        "description": "Matriculacion de Educacion",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=EDUCACION",
+    },
+    {
+        "service": "AUTOMOTORES_PEATONES",
+        "description": "Matriculacion de Automotores y Peatones",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=AUTOMOTORES_PEATONES",
+    },
+    {
+        "service": "CASAS_TARJETAS_COMERCIALES",
+        "description": "Matriculacion de Tarjetas Comerciales",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CASAS_TARJETAS_COMERCIALES",
+    },
+    {
+        "service": "IMPUESTOS_OBLIGACIONES",
+        "description": "Matriculacion de Impuestos y Obligaciones",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=IMPUESTOS_OBLIGACIONES",
+    },
+    {
+        "service": "PAGO_ADUANA",
+        "description": "Matriculacion de Servicios Aduaneros",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PAGO_ADUANA",
+    },
+    {
+        "service": "SALUD",
+        "description": "Matriculacion de Salud",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=SALUD",
+    },
+    {
+        "service": "OTROS",
+        "description": "Matriculacion de Otros",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=OTROS",
+    },
 ]
 
 DEEPLINK_MAP = {item["service"]: item for item in DEEPLINKS}
@@ -247,7 +308,6 @@ ONBOARDING_LINKS: Dict[str, str] = {
 PRODUCT_OPTIONS = [
     "CUENTA DE AHORROS",
     "CUENTA MAS",
-    "CUENTA MAXIMA",
     "BANKARD",
     "CDP",
     "CUENTA CORRIENTE",
@@ -260,7 +320,6 @@ PRODUCT_OPTIONS = [
 PRODUCT_MAP: Dict[str, str] = {
     "CUENTA DE AHORROS": "CTA-AHORROS",
     "CUENTA MAS": "CTA-MAS",
-    "CUENTA MAXIMA": "CTA-MAXIMA",
     "BANKARD": "BANKARD",
     "CDP": "CDP",
     "CUENTA CORRIENTE": "CTA-CORRIENTE",
@@ -386,8 +445,7 @@ def load_test_case(base_url: str) -> None:
     st.session_state["link_type"] = "Sitio web"
     st.session_state["base_url"] = base_url
     st.session_state["utm_source"] = "google"
-    st.session_state["utm_medium_choice"] = "cpc"
-    st.session_state["utm_medium_other"] = ""
+    st.session_state["utm_medium_choice"] = "paid"
     st.session_state["utm_campaign_use_builder"] = False
     st.session_state["utm_campaign"] = "lanzamiento_enero"
     st.session_state["utm_campaign_stage"] = list(STAGE_MAP.keys())[0]
@@ -416,7 +474,6 @@ DEFAULTS = {
     "onboarding_choice": list(ONBOARDING_LINKS.keys())[0],
     "utm_source": "",
     "utm_medium_choice": MEDIUM_OPTIONS[0],
-    "utm_medium_other": "",
     "utm_campaign_use_builder": False,
     "utm_campaign": "",
     "utm_campaign_stage": list(STAGE_MAP.keys())[0],
@@ -496,8 +553,6 @@ with st.sidebar:
         options=medium_options,
         key="utm_medium_choice",
     )
-    if st.session_state["utm_medium_choice"] == "other":
-        st.text_input("utm_medium (otro)", key="utm_medium_other")
 
     st.subheader("utm_campaign")
     st.toggle(
@@ -552,13 +607,7 @@ else:
 source = sanitize(st.session_state["utm_source"])
 
 medium_choice = st.session_state["utm_medium_choice"]
-if medium_choice == "other":
-    medium_raw = st.session_state["utm_medium_other"]
-elif medium_choice == "":
-    medium_raw = ""
-else:
-    medium_raw = medium_choice
-medium = sanitize(medium_raw)
+medium = sanitize(medium_choice)
 
 product = resolve_product_value(
     st.session_state["utm_product_choice"],
