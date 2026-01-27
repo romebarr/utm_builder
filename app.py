@@ -20,7 +20,12 @@ MEDIUM_OPTIONS = [
     "other",
 ]
 
-STAGE_OPTIONS = ["ADQUISICION", "DESARROLLO", "ACTIVACION"]
+STAGE_MAP: Dict[str, str] = {
+    "ADQUISICION": "ADQ",
+    "DESARROLLO": "DES",
+    "RETENCION": "RET",
+    "ACTIVACION": "ACT",
+}
 
 FUNNEL_OPTIONS: Dict[str, str] = {
     "AWARENESS": "AWA",
@@ -179,7 +184,7 @@ def load_test_case(base_url: str) -> None:
     st.session_state["utm_campaign_allow_empty"] = False
     st.session_state["utm_campaign_use_builder"] = False
     st.session_state["utm_campaign"] = "lanzamiento_enero"
-    st.session_state["utm_campaign_stage"] = STAGE_OPTIONS[0]
+    st.session_state["utm_campaign_stage"] = list(STAGE_MAP.keys())[0]
     st.session_state["utm_campaign_funnel"] = list(FUNNEL_OPTIONS.keys())[0]
     st.session_state["utm_campaign_objective"] = OBJECTIVE_OPTIONS[0]
     st.session_state["utm_campaign_tipo"] = "PROMO"
@@ -206,7 +211,7 @@ DEFAULTS = {
     "utm_campaign_allow_empty": False,
     "utm_campaign_use_builder": False,
     "utm_campaign": "",
-    "utm_campaign_stage": STAGE_OPTIONS[0],
+    "utm_campaign_stage": list(STAGE_MAP.keys())[0],
     "utm_campaign_funnel": list(FUNNEL_OPTIONS.keys())[0],
     "utm_campaign_objective": OBJECTIVE_OPTIONS[0],
     "utm_campaign_tipo": "",
@@ -258,7 +263,7 @@ with st.sidebar:
     if st.session_state["utm_campaign_use_builder"]:
         st.selectbox(
             "Etapa",
-            options=STAGE_OPTIONS,
+            options=list(STAGE_MAP.keys()),
             key="utm_campaign_stage",
         )
         st.selectbox(
@@ -311,12 +316,13 @@ product = resolve_product_value(
 )
 
 if st.session_state["utm_campaign_use_builder"]:
+    stage_value = STAGE_MAP.get(st.session_state["utm_campaign_stage"], "")
     funnel_value = FUNNEL_OPTIONS.get(
         st.session_state["utm_campaign_funnel"], ""
     )
     month_value = MONTH_MAP.get(st.session_state["utm_campaign_mes"], "")
     campaign = build_campaign_name(
-        st.session_state["utm_campaign_stage"],
+        stage_value,
         funnel_value,
         product,
         st.session_state["utm_campaign_objective"],
@@ -343,7 +349,7 @@ if not st.session_state["utm_campaign_allow_empty"] and not campaign:
 
 if st.session_state["utm_campaign_use_builder"]:
     missing_fields = []
-    if not sanitize(st.session_state["utm_campaign_stage"]):
+    if not STAGE_MAP.get(st.session_state["utm_campaign_stage"], ""):
         missing_fields.append("Etapa")
     if not FUNNEL_OPTIONS.get(st.session_state["utm_campaign_funnel"], ""):
         missing_fields.append("Funnel")
