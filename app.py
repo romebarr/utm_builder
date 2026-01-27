@@ -20,7 +20,7 @@ MEDIUM_OPTIONS = [
     "other",
 ]
 
-LINK_TYPE_OPTIONS = ["Sitio web", "Deeplink"]
+LINK_TYPE_OPTIONS = ["Sitio web", "Deeplink", "Onboarding No Clientes"]
 
 STAGE_MAP: Dict[str, str] = {
     "ADQUISICION": "ADQ",
@@ -238,6 +238,12 @@ DEEPLINKS = [
 
 DEEPLINK_MAP = {item["service"]: item for item in DEEPLINKS}
 
+ONBOARDING_LINKS: Dict[str, str] = {
+    "Credimax": "https://credimax.bolivariano.com/",
+    "Tarjeta de Credito": "https://tarjetadecredito.bolivariano.com/",
+    "Cuenta de Ahorros": "https://cuentas.bolivariano.com/",
+}
+
 PRODUCT_OPTIONS = [
     "CUENTA DE AHORROS",
     "CUENTA MAS",
@@ -407,6 +413,7 @@ DEFAULTS = {
     "base_url": "",
     "deeplink_choice": DEEPLINKS[0]["service"],
     "deeplink_servicio": "",
+    "onboarding_choice": list(ONBOARDING_LINKS.keys())[0],
     "utm_source": "",
     "utm_medium_choice": MEDIUM_OPTIONS[0],
     "utm_medium_other": "",
@@ -437,7 +444,7 @@ with st.sidebar:
     )
     if st.session_state["link_type"] == "Sitio web":
         st.text_input("URL base (obligatorio)", key="base_url")
-    else:
+    elif st.session_state["link_type"] == "Deeplink":
         st.selectbox(
             "Servicio deeplink",
             options=[item["service"] for item in DEEPLINKS],
@@ -459,6 +466,21 @@ with st.sidebar:
         st.session_state["base_url"] = selected_url
         st.text_input(
             "URL base (deeplink)",
+            value=selected_url,
+            disabled=True,
+        )
+    else:
+        st.selectbox(
+            "Onboarding no clientes",
+            options=list(ONBOARDING_LINKS.keys()),
+            key="onboarding_choice",
+        )
+        selected_url = ONBOARDING_LINKS[
+            st.session_state["onboarding_choice"]
+        ]
+        st.session_state["base_url"] = selected_url
+        st.text_input(
+            "URL base (onboarding)",
             value=selected_url,
             disabled=True,
         )
@@ -523,6 +545,8 @@ if st.session_state["link_type"] == "Deeplink":
     base_url = DEEPLINK_MAP[st.session_state["deeplink_choice"]]["url"]
     if st.session_state["deeplink_choice"] == "MATRPS":
         base_url += sanitize(st.session_state["deeplink_servicio"])
+elif st.session_state["link_type"] == "Onboarding No Clientes":
+    base_url = ONBOARDING_LINKS[st.session_state["onboarding_choice"]]
 else:
     base_url = st.session_state["base_url"].strip()
 source = sanitize(st.session_state["utm_source"])
