@@ -197,10 +197,8 @@ def load_test_case(base_url: str) -> None:
     """Load a test case into session state."""
     st.session_state["base_url"] = base_url
     st.session_state["utm_source"] = "google"
-    st.session_state["utm_medium_allow_empty"] = False
     st.session_state["utm_medium_choice"] = "cpc"
     st.session_state["utm_medium_other"] = ""
-    st.session_state["utm_campaign_allow_empty"] = False
     st.session_state["utm_campaign_use_builder"] = False
     st.session_state["utm_campaign"] = "lanzamiento_enero"
     st.session_state["utm_campaign_stage"] = list(STAGE_MAP.keys())[0]
@@ -224,10 +222,8 @@ st.write(
 DEFAULTS = {
     "base_url": "",
     "utm_source": "",
-    "utm_medium_allow_empty": False,
     "utm_medium_choice": MEDIUM_OPTIONS[0],
     "utm_medium_other": "",
-    "utm_campaign_allow_empty": False,
     "utm_campaign_use_builder": False,
     "utm_campaign": "",
     "utm_campaign_stage": list(STAGE_MAP.keys())[0],
@@ -250,32 +246,21 @@ with st.sidebar:
     st.header("Inputs")
     st.text_input("URL base (obligatorio)", key="base_url")
 
-    st.text_input("utm_source (opcional)", key="utm_source")
+    st.text_input("utm_source (obligatorio)", key="utm_source")
 
     st.subheader("utm_medium")
-    st.toggle(
-        "Permitir vacio en utm_medium", key="utm_medium_allow_empty"
-    )
-    medium_options = (
-        [""] + MEDIUM_OPTIONS
-        if st.session_state["utm_medium_allow_empty"]
-        else MEDIUM_OPTIONS
-    )
+    medium_options = MEDIUM_OPTIONS
     if st.session_state.get("utm_medium_choice") not in medium_options:
         st.session_state["utm_medium_choice"] = medium_options[0]
     st.selectbox(
         "utm_medium",
         options=medium_options,
         key="utm_medium_choice",
-        format_func=lambda value: "-- vacio --" if value == "" else value,
     )
     if st.session_state["utm_medium_choice"] == "other":
         st.text_input("utm_medium (otro)", key="utm_medium_other")
 
     st.subheader("utm_campaign")
-    st.toggle(
-        "Permitir vacio en utm_campaign", key="utm_campaign_allow_empty"
-    )
     st.toggle(
         "Generar utm_campaign", key="utm_campaign_use_builder"
     )
@@ -306,7 +291,7 @@ with st.sidebar:
     else:
         st.text_input("utm_campaign", key="utm_campaign")
 
-    st.text_input("utm_content (opcional)", key="utm_content")
+    st.text_input("utm_content (obligatorio)", key="utm_content")
     st.text_input("utm_testing (opcional)", key="utm_testing")
 
     st.subheader("utm_product")
@@ -359,13 +344,20 @@ errors: List[str] = []
 if not base_url:
     errors.append("La URL base es obligatoria.")
 
-if not st.session_state["utm_medium_allow_empty"] and not medium:
-    errors.append("utm_medium es obligatorio. Activa 'Permitir vacio' para omitirlo.")
+if not source:
+    errors.append("utm_source es obligatorio.")
 
-if not st.session_state["utm_campaign_allow_empty"] and not campaign:
-    errors.append(
-        "utm_campaign es obligatorio. Activa 'Permitir vacio' para omitirlo."
-    )
+if not medium:
+    errors.append("utm_medium es obligatorio.")
+
+if not content:
+    errors.append("utm_content es obligatorio.")
+
+if not campaign:
+    errors.append("utm_campaign es obligatorio.")
+
+if not product:
+    errors.append("utm_product es obligatorio.")
 
 if st.session_state["utm_campaign_use_builder"]:
     missing_fields = []
@@ -379,8 +371,6 @@ if st.session_state["utm_campaign_use_builder"]:
         missing_fields.append("Mes")
     if not normalize_year(st.session_state["utm_campaign_anio"]):
         missing_fields.append("Anio")
-    if not sanitize(product):
-        missing_fields.append("Producto")
     if missing_fields:
         errors.append(
             "Faltan campos para generar utm_campaign: "
