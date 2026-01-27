@@ -20,6 +20,24 @@ MEDIUM_OPTIONS = [
     "other",
 ]
 
+STAGE_OPTIONS = ["ADQUISICION", "DESARROLLO", "ACTIVACION"]
+
+FUNNEL_OPTIONS: Dict[str, str] = {
+    "AWARENESS": "AWA",
+    "CONSIDERACION": "CONS",
+    "CONVERSION": "CONV",
+}
+
+OBJECTIVE_OPTIONS = [
+    "APERTURA",
+    "ACEPTACION",
+    "OPERACION",
+    "TRAFICO",
+    "ALCANCE",
+]
+
+MONTH_OPTIONS = [f"{month:02d}" for month in range(1, 13)]
+
 PRODUCT_OPTIONS = [
     "CUENTA DE AHORROS",
     "CUENTA MAS",
@@ -114,6 +132,30 @@ def build_params(
     return params
 
 
+def build_campaign_name(
+    stage: str,
+    funnel: str,
+    product: str,
+    objective: str,
+    tipo: str,
+    mes: str,
+    anio: str,
+) -> str:
+    """Build utm_campaign name using the required nomenclature."""
+    parts = [
+        sanitize(stage),
+        sanitize(funnel),
+        sanitize(product),
+        sanitize(objective),
+        sanitize(tipo),
+        sanitize(mes),
+        sanitize(anio),
+    ]
+    if any(not part for part in parts):
+        return ""
+    return "_".join(parts)
+
+
 def load_test_case(base_url: str) -> None:
     """Load a test case into session state."""
     st.session_state["base_url"] = base_url
@@ -122,7 +164,14 @@ def load_test_case(base_url: str) -> None:
     st.session_state["utm_medium_choice"] = "cpc"
     st.session_state["utm_medium_other"] = ""
     st.session_state["utm_campaign_allow_empty"] = False
+    st.session_state["utm_campaign_use_builder"] = False
     st.session_state["utm_campaign"] = "lanzamiento_enero"
+    st.session_state["utm_campaign_stage"] = STAGE_OPTIONS[0]
+    st.session_state["utm_campaign_funnel"] = list(FUNNEL_OPTIONS.keys())[0]
+    st.session_state["utm_campaign_objective"] = OBJECTIVE_OPTIONS[0]
+    st.session_state["utm_campaign_tipo"] = "PROMO"
+    st.session_state["utm_campaign_mes"] = "01"
+    st.session_state["utm_campaign_anio"] = "2026"
     st.session_state["utm_content"] = "banner_a"
     st.session_state["utm_testing"] = "test_a"
     st.session_state["utm_product_choice"] = "CUENTA DE AHORROS"
@@ -142,7 +191,14 @@ DEFAULTS = {
     "utm_medium_choice": MEDIUM_OPTIONS[0],
     "utm_medium_other": "",
     "utm_campaign_allow_empty": False,
+    "utm_campaign_use_builder": False,
     "utm_campaign": "",
+    "utm_campaign_stage": STAGE_OPTIONS[0],
+    "utm_campaign_funnel": list(FUNNEL_OPTIONS.keys())[0],
+    "utm_campaign_objective": OBJECTIVE_OPTIONS[0],
+    "utm_campaign_tipo": "",
+    "utm_campaign_mes": "",
+    "utm_campaign_anio": "",
     "utm_content": "",
     "utm_testing": "",
     "utm_product_choice": PRODUCT_OPTIONS[0],
@@ -183,7 +239,35 @@ with st.sidebar:
     st.toggle(
         "Permitir vacio en utm_campaign", key="utm_campaign_allow_empty"
     )
-    st.text_input("utm_campaign", key="utm_campaign")
+    st.toggle(
+        "Generar utm_campaign", key="utm_campaign_use_builder"
+    )
+    if st.session_state["utm_campaign_use_builder"]:
+        st.selectbox(
+            "Etapa",
+            options=STAGE_OPTIONS,
+            key="utm_campaign_stage",
+        )
+        st.selectbox(
+            "Funnel",
+            options=list(FUNNEL_OPTIONS.keys()),
+            key="utm_campaign_funnel",
+        )
+        st.selectbox(
+            "Objetivo",
+            options=OBJECTIVE_OPTIONS,
+            key="utm_campaign_objective",
+        )
+        st.text_input("Tipo", key="utm_campaign_tipo")
+        st.selectbox(
+            "Mes",
+            options=[""] + MONTH_OPTIONS,
+            key="utm_campaign_mes",
+            format_func=lambda value: "Selecciona" if value == "" else value,
+        )
+        st.text_input("Anio", key="utm_campaign_anio")
+    else:
+        st.text_input("utm_campaign", key="utm_campaign")
 
     st.text_input("utm_content (opcional)", key="utm_content")
     st.text_input("utm_testing (opcional)", key="utm_testing")
@@ -208,14 +292,28 @@ else:
     medium_raw = medium_choice
 medium = sanitize(medium_raw)
 
-campaign = sanitize(st.session_state["utm_campaign"])
-content = sanitize(st.session_state["utm_content"])
-testing = sanitize(st.session_state["utm_testing"])
-
 product = resolve_product_value(
     st.session_state["utm_product_choice"],
     st.session_state["utm_product_other"],
 )
+
+if st.session_state["utm_campaign_use_builder"]:
+    funnel_value = FUNNEL_OPTIONS.get(
+        st.session_state["utm_campaign_funnel"], ""
+    )
+    campaign = build_campaign_name(
+        st.session_state["utm_campaign_stage"],
+        funnel_value,
+        product,
+        st.session_state["utm_campaign_objective"],
+        st.session_state["utm_campaign_tipo"],
+        st.session_state["utm_campaign_mes"],
+        st.session_state["utm_campaign_anio"],
+    )
+else:
+    campaign = sanitize(st.session_state["utm_campaign"])
+content = sanitize(st.session_state["utm_content"])
+testing = sanitize(st.session_state["utm_testing"])
 
 errors: List[str] = []
 if not base_url:
@@ -228,6 +326,29 @@ if not st.session_state["utm_campaign_allow_empty"] and not campaign:
     errors.append(
         "utm_campaign es obligatorio. Activa 'Permitir vacio' para omitirlo."
     )
+
+if st.session_state["utm_campaign_use_builder"]:
+    missing_fields = []
+    if not sanitize(st.session_state["utm_campaign_stage"]):
+        missing_fields.append("Etapa")
+    if not FUNNEL_OPTIONS.get(st.session_state["utm_campaign_funnel"], ""):
+        missing_fields.append("Funnel")
+    if not sanitize(st.session_state["utm_campaign_objective"]):
+        missing_fields.append("Objetivo")
+    if not sanitize(st.session_state["utm_campaign_tipo"]):
+        missing_fields.append("Tipo")
+    if not sanitize(st.session_state["utm_campaign_mes"]):
+        missing_fields.append("Mes")
+    if not sanitize(st.session_state["utm_campaign_anio"]):
+        missing_fields.append("Anio")
+    if not sanitize(product):
+        missing_fields.append("Producto")
+    if missing_fields:
+        errors.append(
+            "Faltan campos para generar utm_campaign: "
+            + ", ".join(missing_fields)
+            + "."
+        )
 
 if base_url and not (
     base_url.startswith("http://") or base_url.startswith("https://")
@@ -251,6 +372,15 @@ st.text_area(
 
 if final_url:
     st.code(final_url)
+
+if st.session_state["utm_campaign_use_builder"]:
+    st.subheader("utm_campaign generado")
+    st.text_input(
+        "Valor generado",
+        value=campaign,
+        disabled=True,
+        help="Se usa este valor en la URL final.",
+    )
 
 st.subheader("Vista previa de parametros")
 if params:
