@@ -442,9 +442,7 @@ with st.sidebar:
             "Servicio deeplink",
             options=[item["service"] for item in DEEPLINKS],
             key="deeplink_choice",
-            format_func=lambda value: (
-                f"{value} - {DEEPLINK_MAP[value]['description']}"
-            ),
+            format_func=lambda value: DEEPLINK_MAP[value]["description"],
         )
         if st.session_state["deeplink_choice"] == "MATRPS":
             st.text_input("servicio (opcional)", key="deeplink_servicio")
@@ -456,7 +454,12 @@ with st.sidebar:
             and sanitize(st.session_state["deeplink_servicio"])
         ):
             selected_url += sanitize(st.session_state["deeplink_servicio"])
-        st.text_input("URL deeplink", value=selected_url, disabled=True)
+        st.session_state["base_url"] = selected_url
+        st.text_input(
+            "URL base (deeplink)",
+            value=selected_url,
+            disabled=True,
+        )
 
     st.text_input("utm_source (obligatorio)", key="utm_source")
 
