@@ -20,6 +20,8 @@ MEDIUM_OPTIONS = [
     "other",
 ]
 
+LINK_TYPE_OPTIONS = ["Sitio web", "Deeplink"]
+
 STAGE_MAP: Dict[str, str] = {
     "ADQUISICION": "ADQ",
     "DESARROLLO": "DES",
@@ -56,6 +58,186 @@ MONTH_MAP: Dict[str, str] = {
     "DICIEMBRE": "12",
 }
 
+DEEPLINKS = [
+    {
+        "service": "ACTCV",
+        "description": "Activacion de Clave Virtual",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=ACTCV",
+    },
+    {
+        "service": "ACTDATOS",
+        "description": "Actualizacion de Datos",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=ACTDATOS",
+    },
+    {
+        "service": "AVAEFE",
+        "description": "Avance en efectivo",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=AVAEFE",
+    },
+    {
+        "service": "CTARD",
+        "description": "Compra con tarjeta",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CTARD",
+    },
+    {
+        "service": "CTAID",
+        "description": "Compra con tarjeta Internacional",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CTAID",
+    },
+    {
+        "service": "SERVICC",
+        "description": "Consola de Pago Servicios",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=SERVICC",
+    },
+    {
+        "service": "CONIN",
+        "description": "Consumo por Internet",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CONIN",
+    },
+    {
+        "service": "DESTC",
+        "description": "Desbloqueo de TC autogestion",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=DESTC",
+    },
+    {
+        "service": "DESUSR",
+        "description": "Desbloqueo de usuario",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=DESUSR",
+    },
+    {
+        "service": "DESTD",
+        "description": "Desbloqueo temporal TD autogestion",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=DESTD",
+    },
+    {
+        "service": "DIFCO",
+        "description": "Diferimiento de Consumo y avance",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=DIFCO",
+    },
+    {
+        "service": "DIFSAL",
+        "description": "Diferimiento de saldos",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=DIFSAL",
+    },
+    {
+        "service": "PAUTPEA",
+        "description": "Flujo pago servicios Automotores y Peatones",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PAUTPEA",
+    },
+    {
+        "service": "IMPOBLI",
+        "description": "Flujo pago servicios Impuestos y obligaciones",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=IMPOBLI",
+    },
+    {
+        "service": "PTLFCEL",
+        "description": "Flujo pago servicios Telefonia Celular",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PTLFCEL",
+    },
+    {
+        "service": "LOGIN",
+        "description": "Ingreso a la app",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=LOGIN",
+    },
+    {
+        "service": "MATRPS",
+        "description": "Matriculacion Pago de Servicios",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=MATRPS&servicio=",
+    },
+    {
+        "service": "OPENACOUNT",
+        "description": "ONB Apertura de Cuenta",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=OPENACOUNT",
+    },
+    {
+        "service": "CRTDEPOL",
+        "description": "ONB Certificado de deposito online",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CRTDEPOL",
+    },
+    {
+        "service": "CREDIMAX",
+        "description": "ONB Credimax Online",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CREDIMAX",
+    },
+    {
+        "service": "CTAMASON",
+        "description": "ONB Cuenta Mas Online",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CTAMASON",
+    },
+    {
+        "service": "CTAMAXON",
+        "description": "ONB Cuenta Maxima Online",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=CTAMAXON",
+    },
+    {
+        "service": "REFBANCA",
+        "description": "ONB Referencia Bancaria",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=REFBANCA",
+    },
+    {
+        "service": "SOLPRO",
+        "description": "ONB Solicitud de productos",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=SOLPRO",
+    },
+    {
+        "service": "TARBKN",
+        "description": "ONB Tarjeta de credito cliente",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=TARBKN",
+    },
+    {
+        "service": "PEDUCA",
+        "description": "Pagar Educacion",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PEDUCA",
+    },
+    {
+        "service": "PAGUA",
+        "description": "Pagar el agua",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PAGUA",
+    },
+    {
+        "service": "PINNET",
+        "description": "Pagar el internet",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PINNET",
+    },
+    {
+        "service": "PIESS",
+        "description": "Pagar IESS",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PIESS",
+    },
+    {
+        "service": "PLUZ",
+        "description": "Pagar la luz",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PLUZ",
+    },
+    {
+        "service": "PTRJCA",
+        "description": "Pagar Tarjetas comerciales",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PTRJCA",
+    },
+    {
+        "service": "PTLFIJA",
+        "description": "Pagar telefonia fija",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PTLFIJA",
+    },
+    {
+        "service": "PTVPAG",
+        "description": "Pagar Television pagada",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=PTVPAG",
+    },
+    {
+        "service": "SCOREC",
+        "description": "Score Crediticio",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=SCOREC",
+    },
+    {
+        "service": "TRFWIP",
+        "description": "WIP",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=TRFWIP",
+    },
+]
+
+DEEPLINK_MAP = {item["service"]: item for item in DEEPLINKS}
+
 PRODUCT_OPTIONS = [
     "CUENTA DE AHORROS",
     "CUENTA MAS",
@@ -89,6 +271,16 @@ def sanitize(value: str) -> str:
     value = value.strip()
     value = re.sub(r"\s+", "_", value)
     return value
+
+
+def normalize_year(value: str) -> str:
+    """Normalize year to last two digits."""
+    if value is None:
+        return ""
+    digits = re.sub(r"\D", "", value.strip())
+    if len(digits) < 2:
+        return ""
+    return digits[-2:]
 
 
 def normalize_product_label(value: str) -> str:
@@ -160,28 +352,36 @@ def build_campaign_name(
     anio: str,
 ) -> str:
     """Build utm_campaign name using the required nomenclature."""
+    required_parts = [
+        sanitize(stage),
+        sanitize(funnel),
+        sanitize(product),
+        sanitize(objective),
+        sanitize(mes),
+        sanitize(anio),
+    ]
+    if any(not part for part in required_parts):
+        return ""
+    optional_tipo = sanitize(tipo)
     parts = [
         sanitize(stage),
         sanitize(funnel),
         sanitize(product),
         sanitize(objective),
-        sanitize(tipo),
-        sanitize(mes),
-        sanitize(anio),
     ]
-    if any(not part for part in parts):
-        return ""
+    if optional_tipo:
+        parts.append(optional_tipo)
+    parts.extend([sanitize(mes), sanitize(anio)])
     return "_".join(parts)
 
 
 def load_test_case(base_url: str) -> None:
     """Load a test case into session state."""
+    st.session_state["link_type"] = "Sitio web"
     st.session_state["base_url"] = base_url
     st.session_state["utm_source"] = "google"
-    st.session_state["utm_medium_allow_empty"] = False
     st.session_state["utm_medium_choice"] = "cpc"
     st.session_state["utm_medium_other"] = ""
-    st.session_state["utm_campaign_allow_empty"] = False
     st.session_state["utm_campaign_use_builder"] = False
     st.session_state["utm_campaign"] = "lanzamiento_enero"
     st.session_state["utm_campaign_stage"] = list(STAGE_MAP.keys())[0]
@@ -203,12 +403,13 @@ st.write(
 )
 
 DEFAULTS = {
+    "link_type": "Sitio web",
     "base_url": "",
+    "deeplink_choice": DEEPLINKS[0]["service"],
+    "deeplink_servicio": "",
     "utm_source": "",
-    "utm_medium_allow_empty": False,
     "utm_medium_choice": MEDIUM_OPTIONS[0],
     "utm_medium_other": "",
-    "utm_campaign_allow_empty": False,
     "utm_campaign_use_builder": False,
     "utm_campaign": "",
     "utm_campaign_stage": list(STAGE_MAP.keys())[0],
@@ -229,34 +430,54 @@ for key, value in DEFAULTS.items():
 
 with st.sidebar:
     st.header("Inputs")
-    st.text_input("URL base (obligatorio)", key="base_url")
+    st.selectbox(
+        "Tipo de enlace",
+        options=LINK_TYPE_OPTIONS,
+        key="link_type",
+    )
+    if st.session_state["link_type"] == "Sitio web":
+        st.text_input("URL base (obligatorio)", key="base_url")
+    else:
+        st.selectbox(
+            "Servicio deeplink",
+            options=[item["service"] for item in DEEPLINKS],
+            key="deeplink_choice",
+            format_func=lambda value: (
+                f"{DEEPLINK_MAP[value]['description']} ({value})"
+            ),
+        )
+        if st.session_state["deeplink_choice"] == "MATRPS":
+            st.text_input("servicio (opcional)", key="deeplink_servicio")
+        selected_url = DEEPLINK_MAP[
+            st.session_state["deeplink_choice"]
+        ]["url"]
+        if (
+            st.session_state["deeplink_choice"] == "MATRPS"
+            and sanitize(st.session_state["deeplink_servicio"])
+        ):
+            selected_url += sanitize(st.session_state["deeplink_servicio"])
+        st.session_state["base_url"] = selected_url
+        st.text_input(
+            "URL base (deeplink)",
+            value=selected_url,
+            disabled=True,
+        )
 
-    st.text_input("utm_source (opcional)", key="utm_source")
+    st.text_input("utm_source (obligatorio)", key="utm_source")
 
     st.subheader("utm_medium")
-    st.toggle(
-        "Permitir vacio en utm_medium", key="utm_medium_allow_empty"
-    )
-    medium_options = (
-        [""] + MEDIUM_OPTIONS
-        if st.session_state["utm_medium_allow_empty"]
-        else MEDIUM_OPTIONS
-    )
+    medium_options = MEDIUM_OPTIONS
     if st.session_state.get("utm_medium_choice") not in medium_options:
         st.session_state["utm_medium_choice"] = medium_options[0]
     st.selectbox(
         "utm_medium",
         options=medium_options,
         key="utm_medium_choice",
-        format_func=lambda value: "-- vacio --" if value == "" else value,
     )
     if st.session_state["utm_medium_choice"] == "other":
         st.text_input("utm_medium (otro)", key="utm_medium_other")
 
     st.subheader("utm_campaign")
-    st.toggle(
-        "Permitir vacio en utm_campaign", key="utm_campaign_allow_empty"
-    )
     st.toggle(
         "Generar utm_campaign", key="utm_campaign_use_builder"
     )
@@ -276,7 +497,7 @@ with st.sidebar:
             options=OBJECTIVE_OPTIONS,
             key="utm_campaign_objective",
         )
-        st.text_input("Tipo", key="utm_campaign_tipo")
+        st.text_input("Tipo (opcional)", key="utm_campaign_tipo")
         st.selectbox(
             "Mes",
             options=[""] + list(MONTH_MAP.keys()),
@@ -287,7 +508,7 @@ with st.sidebar:
     else:
         st.text_input("utm_campaign", key="utm_campaign")
 
-    st.text_input("utm_content (opcional)", key="utm_content")
+    st.text_input("utm_content (obligatorio)", key="utm_content")
     st.text_input("utm_testing (opcional)", key="utm_testing")
 
     st.subheader("utm_product")
@@ -298,7 +519,12 @@ with st.sidebar:
         st.text_input("utm_product (otro)", key="utm_product_other")
 
 
-base_url = st.session_state["base_url"].strip()
+if st.session_state["link_type"] == "Deeplink":
+    base_url = DEEPLINK_MAP[st.session_state["deeplink_choice"]]["url"]
+    if st.session_state["deeplink_choice"] == "MATRPS":
+        base_url += sanitize(st.session_state["deeplink_servicio"])
+else:
+    base_url = st.session_state["base_url"].strip()
 source = sanitize(st.session_state["utm_source"])
 
 medium_choice = st.session_state["utm_medium_choice"]
@@ -321,6 +547,7 @@ if st.session_state["utm_campaign_use_builder"]:
         st.session_state["utm_campaign_funnel"], ""
     )
     month_value = MONTH_MAP.get(st.session_state["utm_campaign_mes"], "")
+    year_value = normalize_year(st.session_state["utm_campaign_anio"])
     campaign = build_campaign_name(
         stage_value,
         funnel_value,
@@ -328,7 +555,7 @@ if st.session_state["utm_campaign_use_builder"]:
         st.session_state["utm_campaign_objective"],
         st.session_state["utm_campaign_tipo"],
         month_value,
-        st.session_state["utm_campaign_anio"],
+        year_value,
     )
 else:
     campaign = sanitize(st.session_state["utm_campaign"])
@@ -339,13 +566,20 @@ errors: List[str] = []
 if not base_url:
     errors.append("La URL base es obligatoria.")
 
-if not st.session_state["utm_medium_allow_empty"] and not medium:
-    errors.append("utm_medium es obligatorio. Activa 'Permitir vacio' para omitirlo.")
+if not source:
+    errors.append("utm_source es obligatorio.")
 
-if not st.session_state["utm_campaign_allow_empty"] and not campaign:
-    errors.append(
-        "utm_campaign es obligatorio. Activa 'Permitir vacio' para omitirlo."
-    )
+if not medium:
+    errors.append("utm_medium es obligatorio.")
+
+if not content:
+    errors.append("utm_content es obligatorio.")
+
+if not campaign:
+    errors.append("utm_campaign es obligatorio.")
+
+if not product:
+    errors.append("utm_product es obligatorio.")
 
 if st.session_state["utm_campaign_use_builder"]:
     missing_fields = []
@@ -355,14 +589,10 @@ if st.session_state["utm_campaign_use_builder"]:
         missing_fields.append("Funnel")
     if not sanitize(st.session_state["utm_campaign_objective"]):
         missing_fields.append("Objetivo")
-    if not sanitize(st.session_state["utm_campaign_tipo"]):
-        missing_fields.append("Tipo")
     if not MONTH_MAP.get(st.session_state["utm_campaign_mes"], ""):
         missing_fields.append("Mes")
-    if not sanitize(st.session_state["utm_campaign_anio"]):
+    if not normalize_year(st.session_state["utm_campaign_anio"]):
         missing_fields.append("Anio")
-    if not sanitize(product):
-        missing_fields.append("Producto")
     if missing_fields:
         errors.append(
             "Faltan campos para generar utm_campaign: "
