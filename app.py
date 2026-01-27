@@ -91,6 +91,16 @@ def sanitize(value: str) -> str:
     return value
 
 
+def normalize_year(value: str) -> str:
+    """Normalize year to last two digits."""
+    if value is None:
+        return ""
+    digits = re.sub(r"\D", "", value.strip())
+    if len(digits) < 2:
+        return ""
+    return digits[-2:]
+
+
 def normalize_product_label(value: str) -> str:
     """Normalize product labels for matching."""
     if value is None:
@@ -160,17 +170,26 @@ def build_campaign_name(
     anio: str,
 ) -> str:
     """Build utm_campaign name using the required nomenclature."""
+    required_parts = [
+        sanitize(stage),
+        sanitize(funnel),
+        sanitize(product),
+        sanitize(objective),
+        sanitize(mes),
+        sanitize(anio),
+    ]
+    if any(not part for part in required_parts):
+        return ""
+    optional_tipo = sanitize(tipo)
     parts = [
         sanitize(stage),
         sanitize(funnel),
         sanitize(product),
         sanitize(objective),
-        sanitize(tipo),
-        sanitize(mes),
-        sanitize(anio),
     ]
-    if any(not part for part in parts):
-        return ""
+    if optional_tipo:
+        parts.append(optional_tipo)
+    parts.extend([sanitize(mes), sanitize(anio)])
     return "_".join(parts)
 
 
@@ -276,7 +295,7 @@ with st.sidebar:
             options=OBJECTIVE_OPTIONS,
             key="utm_campaign_objective",
         )
-        st.text_input("Tipo", key="utm_campaign_tipo")
+        st.text_input("Tipo (opcional)", key="utm_campaign_tipo")
         st.selectbox(
             "Mes",
             options=[""] + list(MONTH_MAP.keys()),
@@ -321,6 +340,7 @@ if st.session_state["utm_campaign_use_builder"]:
         st.session_state["utm_campaign_funnel"], ""
     )
     month_value = MONTH_MAP.get(st.session_state["utm_campaign_mes"], "")
+    year_value = normalize_year(st.session_state["utm_campaign_anio"])
     campaign = build_campaign_name(
         stage_value,
         funnel_value,
@@ -328,7 +348,7 @@ if st.session_state["utm_campaign_use_builder"]:
         st.session_state["utm_campaign_objective"],
         st.session_state["utm_campaign_tipo"],
         month_value,
-        st.session_state["utm_campaign_anio"],
+        year_value,
     )
 else:
     campaign = sanitize(st.session_state["utm_campaign"])
@@ -355,11 +375,9 @@ if st.session_state["utm_campaign_use_builder"]:
         missing_fields.append("Funnel")
     if not sanitize(st.session_state["utm_campaign_objective"]):
         missing_fields.append("Objetivo")
-    if not sanitize(st.session_state["utm_campaign_tipo"]):
-        missing_fields.append("Tipo")
     if not MONTH_MAP.get(st.session_state["utm_campaign_mes"], ""):
         missing_fields.append("Mes")
-    if not sanitize(st.session_state["utm_campaign_anio"]):
+    if not normalize_year(st.session_state["utm_campaign_anio"]):
         missing_fields.append("Anio")
     if not sanitize(product):
         missing_fields.append("Producto")
