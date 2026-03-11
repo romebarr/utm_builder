@@ -305,6 +305,11 @@ DEEPLINKS = [
         "description": "Matriculacion de Otros",
         "url": "https://mercadeo.bolivariano.com/index.html?dlop=OTROS",
     },
+    {
+        "service": "REPROGRAMACION_CREDITO",
+        "description": "Reprogramacion de credito",
+        "url": "https://mercadeo.bolivariano.com/index.html?dlop=REFONL",
+    },
 ]
 
 DEEPLINK_MAP = {item["service"]: item for item in DEEPLINKS}
